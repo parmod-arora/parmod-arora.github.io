@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"><url>
-    <loc>http://example.org/</loc><lastmod>2020-04-11T18:05:09+08:00</lastmod></url><url>
-    <loc>http://example.org/posts/</loc><lastmod>2020-04-11T18:05:09+08:00</lastmod></url><url>
-    <loc>http://example.org/posts/stripe/stripe-intgeration-3ds/</loc><lastmod>2020-04-11T18:05:09+08:00</lastmod></url><url>
+    <loc>http://example.org/</loc><lastmod>2020-04-11T18:04:30+08:00</lastmod></url><url>
     <loc>http://example.org/posts/stripe/stripe-intgeration/</loc><lastmod>2020-04-11T18:04:30+08:00</lastmod></url><url>
-    <loc>http://example.org/categories/</loc></url><url>
-    <loc>http://example.org/tags/</loc></url></urlset>
+    <loc>http://example.org/posts/</loc><lastmod>2020-04-11T18:04:30+08:00</lastmod></url><url>
+    <loc>http://example.org/tags/markdown/</loc><lastmod>2019-03-09T00:00:00+00:00</lastmod></url><url>
+    <loc>http://example.org/posts/stripe/lorem-ipsum-dolor-si-amet/</loc><lastmod>2019-03-09T00:00:00+00:00</lastmod></url><url>
+    <loc>http://example.org/tags/</loc><lastmod>2019-03-09T00:00:00+00:00</lastmod></url><url>
+    <loc>http://example.org/tags/text/</loc><lastmod>2019-03-09T00:00:00+00:00</lastmod></url><url>
+    <loc>http://example.org/categories/</loc></url></urlset>
