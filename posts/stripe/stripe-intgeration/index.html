@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en"><meta charset="utf-8"><meta name="generator" content="Hugo 0.68.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark"><title>One time checkout with Stripe&nbsp;&ndash;&nbsp;My Coding cheats</title><link rel="stylesheet" href="/css/core.min.82670c83c1246af6b12af9fc0a347cf7c9f70377b5d80abbf649bc72da6f28b05450dcbe079f9fdaf4a32f358de0b211.css" integrity="sha384-gmcMg8EkavaxKvn8CjR898n3A3e12Aq79km8ctpvKLBUUNy&#43;B5&#43;f2vSjLzWN4LIR"><body>
+    <div class="base-body"><section id="header" class="site header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><img class="site logo" src="/images/logo.png" alt /><span class="site name">My Coding cheats</span></a></span>
+        <span class="header right-side"></span></div><div class="site slogan"><span class="title">my coding cheats</span></div></section><div id="content"><div class="article-container"><section class="article header">
+    <h1 class="article title">One time checkout with Stripe</h1><p class="article date">2020-04-11</p></section><article class="article markdown-body"><p>There are a lot of Online Payment processing services these days and Stripe is one of them. In this article we will have a look on one time payment processing with stripe and how to  integrate checkout flow in our project.</p>
+<h3 id="overview">Overview</h3>
+<p>I heard about stripe on online and i thought why don&rsquo;t I gave a short and see it myself. Frankly speaking I like stripe because.</p>
+<ol>
+<li>It has great <a href="https://stripe.com/docs"target="_blank">documentation</a>, which i liked the most and also it helped me to build my sample project.</li>
+<li>Many other good features like subscription, save credit card etc. which i will talk in abother post.</li>
+<li>It provide integration with all major cards scheme VISA, MASTERCARD, AMEX, Discover, JCB etc and other wallets like Google Pay and Apple Pay</li>
+</ol>
+<h3 id="requirement">Requirement</h3>
+<ol>
+<li>HTTPS on production but can use over http on development env</li>
+<li>Requires a server to create the session.</li>
+</ol>
+<h3 id="checkout-flow">Checkout flow</h3>
+<p><span class="image-container"><span class="link"><a target="_blank" rel="noopener noreferrer" 
+  href="/images/checkout-one-time-client-server.png"><img class="img" src="/images/checkout-one-time-client-server.png"
+        alt="A flowchart of the Checkout flow"/></a></span></span></p>
+<p>Before prcessing any one time payment stripe want client application to create a session on their server, which represents the intent to purchase by the customer. The Checkout Sessions API provide flexibility for dynamic amounts and line items.</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang">  <span class="nx">stripe</span><span class="p">.</span><span class="nx">Key</span> <span class="p">=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Getenv</span><span class="p">(</span><span class="s">&#34;stripe_secret&#34;</span><span class="p">)</span>
+	<span class="nx">params</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">stripe</span><span class="p">.</span><span class="nx">CheckoutSessionParams</span><span class="p">{</span>
+		<span class="nx">PaymentMethodTypes</span><span class="p">:</span> <span class="nx">stripe</span><span class="p">.</span><span class="nf">StringSlice</span><span class="p">([]</span><span class="kt">string</span><span class="p">{</span>
+			<span class="s">&#34;card&#34;</span><span class="p">,</span>
+		<span class="p">}),</span>
+		<span class="nx">SuccessURL</span><span class="p">:</span> <span class="nx">stripe</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="s">&#34;http://localhost:3000/client/success.html?session_id={CHECKOUT_SESSION_ID}&amp;order_id=&#34;</span> <span class="o">+</span> <span class="nx">model</span><span class="p">.</span><span class="nx">OrderID</span><span class="p">),</span>
+		<span class="nx">CancelURL</span><span class="p">:</span>  <span class="nx">stripe</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="s">&#34;http://localhost:3000/cancel&#34;</span><span class="p">),</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">orderItem</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">model</span><span class="p">.</span><span class="nx">Items</span> <span class="p">{</span>
+		<span class="nx">params</span><span class="p">.</span><span class="nx">LineItems</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">LineItems</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">stripe</span><span class="p">.</span><span class="nx">CheckoutSessionLineItemParams</span><span class="p">{</span>
+			<span class="nx">Name</span><span class="p">:</span>        <span class="nx">stripe</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="nx">orderItem</span><span class="p">.</span><span class="nx">Name</span><span class="p">),</span>
+			<span class="nx">Description</span><span class="p">:</span> <span class="nx">stripe</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="nx">orderItem</span><span class="p">.</span><span class="nx">Description</span><span class="p">),</span>
+			<span class="nx">Amount</span><span class="p">:</span>      <span class="nx">stripe</span><span class="p">.</span><span class="nf">Int64</span><span class="p">(</span><span class="nx">orderItem</span><span class="p">.</span><span class="nx">Amount</span><span class="p">),</span>
+			<span class="nx">Currency</span><span class="p">:</span>    <span class="nx">stripe</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">stripe</span><span class="p">.</span><span class="nx">CurrencySGD</span><span class="p">)),</span>
+			<span class="nx">Quantity</span><span class="p">:</span>    <span class="nx">stripe</span><span class="p">.</span><span class="nf">Int64</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+		<span class="p">})</span>
+	<span class="p">}</span>
+	<span class="nx">session</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">session</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
+</code></pre></div><p>After succesfully creating a session on stripe from our server, our app will redirect the customer to stripe payment form page using below code. where user can provide its personal and credit card information. This whole process is handled by stripe.js loaded in our app page.Its recomendded to load stripe js from <code>https://js.stripe.com</code> instead of your web server.</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">  <span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&#34;https://js.stripe.com/v3/&#34;</span><span class="o">&gt;&lt;</span><span class="err">/script&gt;</span>
+  <span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+    <span class="kd">let</span> <span class="nx">stripe</span> <span class="o">=</span> <span class="nx">Stripe</span><span class="p">(</span><span class="s2">&#34;stripe_key&#34;</span><span class="p">)</span>
+    <span class="nx">stripe</span><span class="p">.</span><span class="nx">redirectToCheckout</span><span class="p">({</span>
+      <span class="nx">sessionId</span><span class="o">:</span> <span class="nx">sessionId</span>
+    <span class="p">})</span>
+  <span class="o">&lt;</span><span class="err">/script&gt;</span>
+</code></pre></div><h3 id="test-cards">Test cards</h3>
+<table>
+<thead>
+<tr>
+<th>NUMBER</th>
+<th>BRAND</th>
+<th>CVC</th>
+<th>DATE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4242424242424242</td>
+<td>Visa</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>4000056655665556</td>
+<td>Visa (debit)</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>5555555555554444</td>
+<td>Mastercard</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>2223003122003222</td>
+<td>Mastercard (2-series)</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>5200828282828210</td>
+<td>Mastercard (debit)</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>5105105105105100</td>
+<td>Mastercard (prepaid)</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>378282246310005</td>
+<td>American Express</td>
+<td>Any 4 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>371449635398431</td>
+<td>American Express</td>
+<td>Any 4 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>6011111111111117</td>
+<td>Discover</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>6011000990139424</td>
+<td>Discover</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>3056930009020004</td>
+<td>Diners Club</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>36227206271667</td>
+<td>Diners Club (14 digit card)</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>3566002020360505</td>
+<td>JCB</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+<tr>
+<td>6200000000000005</td>
+<td>UnionPay</td>
+<td>Any 3 digits</td>
+<td>Any future date</td>
+</tr>
+</tbody>
+</table>
+<p>The CheckoutSessions API allows for dynamic amounts and line items but requires a server to create the session.</p>
+</article></div><section class="article navigation"><p><a class="link" href="/posts/stripe/stripe-intgeration-3ds/"><span class="li">&larr;</span>Stripe Intgeration 3ds</a></p></section></div><section id="footer" class="footer"><div class="footer-wrap">
+    <p class="copyright">©2020 mycodingcheats.</p>
+</div></section></div>
+</body>
+
+</html>

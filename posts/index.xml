@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on My Coding cheats</title>
+    <link>/posts/</link>
+    <description>Recent content in Posts on My Coding cheats</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©2020 mycodingcheats.</copyright>
+    <lastBuildDate>Sat, 11 Apr 2020 18:05:09 +0800</lastBuildDate>
+    
+        <atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Stripe Intgeration 3ds</title>
+      <link>/posts/stripe/stripe-intgeration-3ds/</link>
+      <pubDate>Sat, 11 Apr 2020 18:05:09 +0800</pubDate>
+      
+      <guid>/posts/stripe/stripe-intgeration-3ds/</guid>
+      <description>This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.
+Headings The following HTML —elements represent six levels of section headings. is the highest section level while is the lowest.
+H1 H2 H3 H4 H5 H6 Paragraph</description>
+      
+    </item>
+    
+    <item>
+      <title>One time checkout with Stripe</title>
+      <link>/posts/stripe/stripe-intgeration/</link>
+      <pubDate>Sat, 11 Apr 2020 18:04:30 +0800</pubDate>
+      
+      <guid>/posts/stripe/stripe-intgeration/</guid>
+      <description>There are a lot of Online Payment processing services these days and Stripe is one of them. In this article we will have a look on one time payment processing with stripe and how to integrate checkout flow in our project.
+Overview I heard about stripe on online and i thought why don&amp;rsquo;t I gave a short and see it myself. Frankly speaking I like stripe because.
+ It has great documentation, which i liked the most and also it helped me to build my sample project.</description>
+      
+    </item>
+    
+  </channel>
+</rss>
